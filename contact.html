@@ -8,7 +8,7 @@
 
 <script>
 function encrypt() {
-  if (window.crypto.getRandomValues) {
+  if (window.crypto && window.crypto.getRandomValues) {
 	var message = document.getElementById("message");
 	if (message.value.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && message.value.indexOf("-----END PGP MESSAGE-----") !== -1) {
 		// encryption done		
