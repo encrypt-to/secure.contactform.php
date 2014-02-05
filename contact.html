@@ -13,10 +13,10 @@ function encrypt() {
 	if (message.value.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && message.value.indexOf("-----END PGP MESSAGE-----") !== -1) {
 		// encryption done		
 	} else {
-		openpgp.init();
-	    var pub_key = openpgp.read_publicKey(document.getElementById("pubkey").innerHTML);
-	    message.value = openpgp.write_encrypted_message(pub_key,message.value);
-	    //document.forms["contact"].submit();
+		var pub_key = openpgp.key.readArmored(document.getElementById("pubkey").innerHTML).keys[0];
+		var plaintext = message.value;
+		var ciphertext = openpgp.encryptMessage([pub_key],plaintext);
+		message.value = ciphertext;
 		return true;
 	}    
   } else {
@@ -64,6 +64,8 @@ function encrypt() {
 
 <div id="pubkey" hidden="true">
 -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+-----END PGP PUBLIC KEY BLOCK-----
 </div>
 
 </body>
