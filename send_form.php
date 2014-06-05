@@ -52,7 +52,7 @@ if(isset($_POST['email'])) {
   }
  
  
-$header = 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+$header = 'Content-Type: text/html; charset=UTF-8' . 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
  
 @mail($email_to, $subject, $message, $header);  
  
