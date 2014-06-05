@@ -1,8 +1,8 @@
 <?php
 
 /*
- * secure.contactform.php v1.0
- * Copyright (c) 2013 Jan Wiegelmann, http://wiegelmann.net
+ * secure.contactform.php v1.3
+ * Copyright (c) 2014 Jan Wiegelmann, http://wiegelmann.net
  * open sourced under the MIT license.
  * based on OpenPGP.js a JavaScript implementation of the OpenPGP standard.
  */
@@ -52,8 +52,8 @@ if(isset($_POST['email'])) {
   }
  
  
-$header = 'Content-Type: text/html; charset=UTF-8' . 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
- 
+$header = 'Content-Type: text/plain; charset=UTF-8' . "\r\n" . 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+
 @mail($email_to, $subject, $message, $header);  
  
 ?>
