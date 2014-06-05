@@ -26,6 +26,10 @@ function encrypt() {
 }
 </script>
 
+<h3><a href="https://github.com/encrypt-to/secure.contactform.php">secure.contactform.php</a></h3>
+
+<p>Secure contact form made with PHP based on OpenPGP.js a JavaScript implementation of the OpenPGP standard.</p>
+
 <form name="contact" method="post" action="send_form.php" onsubmit="return encrypt();"> 
 	<table width="450px">
 		<tr>
@@ -33,7 +37,7 @@ function encrypt() {
 	   			<label for="email">Your Email</label>
 	 		</td>
 	  		<td valign="top">
-	   			<input type="text" name="email" size="30">
+	   			<input type="text" name="email" style="height:18px;width:300px;">
 	  		</td>
 	 	</tr>	
 		<tr>
@@ -41,7 +45,7 @@ function encrypt() {
 	   			<label for="subject">Subject</label>
 	 		</td>
 	  		<td valign="top">
-	   			<input type="text" name="subject" size="30">
+	   			<input type="text" name="subject" style="height:18px;width:300px;">
 	  		</td>
 	 	</tr>
 		<tr>
@@ -49,7 +53,7 @@ function encrypt() {
 				<label for="message">Message</label>
 			</td>
 			<td valign="top">
-				<textarea  id="message" name="message" cols="25" rows="6"></textarea>
+				<textarea  id="message" name="message" style="height:150px;width:300px;"></textarea>
 		 </td>
 		</tr>
 		<tr>
