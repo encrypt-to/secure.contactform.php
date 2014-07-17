@@ -17,6 +17,7 @@ Follow these instructions to get the form working:
 
 ### Changelog
 
+* v1.4 Update OpenPGP.js to v0.7.1
 * v1.3 Update OpenPGP.js to v0.6.0
 * v1.2 Update OpenPGP.js to v0.5.1
 * v1.1 Update OpenPGP.js to v0.3.2
