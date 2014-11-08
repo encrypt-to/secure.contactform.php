@@ -52,7 +52,10 @@ if(isset($_POST['email'])) {
   }
  
  
-$header = 'Content-Type: text/plain; charset=UTF-8' . "\r\n" . 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+$header = 'Content-Type: text/plain; charset=UTF-8' . "\n" . 'From: ' . $email_from . "\n" . 'X-Mailer: PHP/' . phpversion();
+
+//Für K9 (Android)
+$message = str_replace("\r", "", $message);
 
 @mail($email_to, $subject, $message, $header);  
  
