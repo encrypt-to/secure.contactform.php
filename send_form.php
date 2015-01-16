@@ -8,7 +8,7 @@
  */
 
 // your email address
-$email_to = "your@mail.com"; 
+$email_to = "your@mail.com";  
 
 if(isset($_POST['email'])) {
  
