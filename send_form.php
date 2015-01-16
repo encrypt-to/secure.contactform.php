@@ -19,10 +19,11 @@ if(isset($_POST['email'])) {
         die();
     }
  
-    if(!isset($_POST['email']) || !isset($_POST['subject']) || !isset($_POST['message'])) { 
+    if(!isset($_POST['name']) || !isset($_POST['email']) || !isset($_POST['subject']) || !isset($_POST['message']) || !isset($_POST['ciphertext'])) { 
         died('We are sorry, but there appears to be a problem with the form you submitted.');       
     }
  
+    $name = $_POST['name']; 
     $email_from = $_POST['email']; 
     $subject = $_POST['subject']; 
     $message = $_POST['message']; 
@@ -34,7 +35,9 @@ if(isset($_POST['email'])) {
   }
  
   $string_exp = "/^[a-zA-Z0-9äöüÄÖÜß .'-]+$/";
- 
+  if(!preg_match($string_exp,$name)) {
+   	$error_message .= 'The Name you entered does not appear to be valid.<br />';
+  } 
   if(!preg_match($string_exp,$subject)) {
    	$error_message .= 'The Subject you entered does not appear to be valid.<br />';
   } 
@@ -52,7 +55,7 @@ if(isset($_POST['email'])) {
   }
  
  
-$header = 'Content-Type: text/plain; charset=UTF-8' . "\n" . 'From: ' . $email_from . "\n" . 'X-Mailer: PHP/' . phpversion();
+$header = 'Content-Type: text/plain; charset=UTF-8' . "\n" . 'From: ' . $name . " <" . $email_from . ">" . "\n" . 'X-Mailer: PHP/' . phpversion();
 
 //Für K9 (Android)
 $message = str_replace("\r", "", $message);
