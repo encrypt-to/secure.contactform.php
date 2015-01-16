@@ -2,72 +2,95 @@
 <html>
 <head>
   <title>Contact</title>
-  <script src="openpgp.min.js" type="text/javascript"></script>
   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<script src="openpgp.min.js" type="text/javascript"></script>
 </head>
 <body>
 
-<script>
-function encrypt() {
-  if (window.crypto && window.crypto.getRandomValues) {
-	var message = document.getElementById("message");
-	if (message.value.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && message.value.indexOf("-----END PGP MESSAGE-----") !== -1) {
-		// encryption done		
+
+<script type="text/javascript">
+/* <![CDATA[ */
+document.addEventListener('DOMContentLoaded', function() {
+	if (window.crypto && window.crypto.getRandomValues) {
+		// form ready
+		document.getElementById("name").focus();
+		var message = document.getElementById("message");
+		var ciphertext = document.getElementById("ciphertext");
+		// encrypt on the fly
+		message.addEventListener("input", function() {
+			ciphertext.style.display = "block";
+			cleanup(encrypt(message.value)).then(function (clean_msg) {
+				ciphertext.value = clean_msg;
+			});
+		});
+		// encrypt on submit
+		document.forms[0].addEventListener("submit", function(evt) {
+			evt.preventDefault();
+			if (form.elements['message'].value == '') {
+				alert('Please enter a message!');
+			} else {
+				encrypt(message.value).then(function(encrypted_msg) {
+					form.elements['message'].value = encrypted_msg;
+					form.submit();
+				});
+				return true;
+			}
+		});
 	} else {
-		var pub_key = openpgp.key.readArmored(document.getElementById("pubkey").innerHTML).keys[0];
-		var plaintext = message.value;
-		var ciphertext = openpgp.encryptMessage([pub_key],plaintext);
-		message.value = ciphertext;
-		return true;
-	}    
-  } else {
-    window.alert("Error: Browser not supported\nReason: We need a cryptographically secure PRNG to be implemented (i.e. the window.crypto method)\nSolution: Use Chrome >= 11, Safari >= 3.1, Firefox >= 21, Opera >= 15 or IE >= 11.");   
-    return false;
-  }
+		// not ready
+// NOT WORKING; old browsers send without encryption...
+		document.getElementById("button").disabled = true;
+		window.alert("Error: Browser not supported\nReason: We need a cryptographically secure PRNG to be implemented (i.e. the window.crypto method)\nSolution: Use Chrome >= 11, Safari >= 3.1, Firefox >= 21, Opera >= 15 or IE >= 11.");
+		return false;
+	}
+});
+
+function cleanup(msg) {
+	return msg.then(function(msgraw) {
+		return msgraw.replace(/(\r\n|\n|\r)/gm,"").replace("-----BEGIN PGP MESSAGE-----Version: OpenPGP.js v0.9.0Comment: http://openpgpjs.org","").replace("-----END PGP MESSAGE-----","");
+	});
 }
+
+function encrypt(msg) {
+	if (msg.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && msg.indexOf("-----END PGP MESSAGE-----") !== -1) {
+		return msg;
+	} else {
+		var key = document.getElementById("pubkey").innerHTML;
+		var publicKey = openpgp.key.readArmored(key).keys[0];
+		return openpgp.encryptMessage(publicKey, msg).then(function(pgpMessage) {
+			return pgpMessage;
+		});
+	}
+}
+/* ]]> */
 </script>
 
 <h3><a href="https://github.com/encrypt-to/secure.contactform.php">secure.contactform.php</a></h3>
 
 <p>Secure contact form made with PHP based on OpenPGP.js a JavaScript implementation of the OpenPGP standard.</p>
 
-<form name="contact" method="post" action="send_form.php" onsubmit="return encrypt();"> 
-	<table width="450px">
-		<tr>
-	  		<td valign="top">
-	   			<label for="email">Your Email</label>
-	 		</td>
-	  		<td valign="top">
-	   			<input type="text" name="email" style="height:18px;width:300px;">
-	  		</td>
-	 	</tr>	
-		<tr>
-	  		<td valign="top">
-	   			<label for="subject">Subject</label>
-	 		</td>
-	  		<td valign="top">
-	   			<input type="text" name="subject" style="height:18px;width:300px;">
-	  		</td>
-	 	</tr>
-		<tr>
-			<td valign="top">
-				<label for="message">Message</label>
-			</td>
-			<td valign="top">
-				<textarea  id="message" name="message" style="height:150px;width:300px;"></textarea>
-		 </td>
-		</tr>
-		<tr>
-		  	<td colspan="2">
-				<input type="submit">
-		  	</td>
-		</tr> 
-	</table> 
+<form id="form" name="contact" method="post" action="send_form.php"> 
+<fieldset>
+		<legend>Secure Contact Form</legend>
+		<label for="name">Your Name</label>
+	<input id="name" name="name" type="text" required="required"><br />
+		<label for="email">Your Email</label>
+		<input id="email" name="email" required><br />
+		<label for="subject">Subject</label>
+		<input id="subject" name="subject" type="text" required><br />
+		<label for="message">Message</label>
+		<textarea id="message" name="message" cols="10" rows="10"></textarea>
+		<br />
+		<button id="button" type="submit">Send</button>
+		<br />
+		<br />
+		<textarea id="ciphertext" name="ciphertext"  cols="10" rows="10" readonly></textarea>
+	</fieldset>
 </form>
 
 <!-- your pgp public key -->
 
-<div id="pubkey" hidden="true">
+<div id="pubkey" style="display:none">
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 -----END PGP PUBLIC KEY BLOCK-----
