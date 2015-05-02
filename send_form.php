@@ -33,7 +33,7 @@ if(isset($_POST['email'])) {
     $error_message .= 'The Email Address you entered does not appear to be valid.<br />'; 
   }
  
-  $string_exp = "/^[A-Za-z .'-]+$/";
+  $string_exp = "/^[a-zA-Z0-9äöüÄÖÜß .'-]+$/";
  
   if(!preg_match($string_exp,$subject)) {
    	$error_message .= 'The Subject you entered does not appear to be valid.<br />';
@@ -52,7 +52,10 @@ if(isset($_POST['email'])) {
   }
  
  
-$header = 'Content-Type: text/plain; charset=UTF-8' . "\r\n" . 'From: ' . $email_from . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+$header = 'Content-Type: text/plain; charset=UTF-8' . "\n" . 'From: ' . $email_from . "\n" . 'X-Mailer: PHP/' . phpversion();
+
+//Für K9 (Android)
+$message = str_replace("\r", "", $message);
 
 @mail($email_to, $subject, $message, $header);  
  
