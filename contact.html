@@ -7,30 +7,50 @@
 <body>
 
 <script>
-function encrypt() {
-  if (window.crypto && window.crypto.getRandomValues) {
-	var message = document.getElementById("message");
-	if (message.value.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && message.value.indexOf("-----END PGP MESSAGE-----") !== -1) {
-		// encryption done		
+document.addEventListener('DOMContentLoaded', function() {
+	if (window.crypto && window.crypto.getRandomValues) {
+		// form ready
+		var message = document.getElementById("message");
+		// encrypt on submit
+    console.log(document.forms);
+		document.forms[0].addEventListener("submit", function(evt) {
+			evt.preventDefault();
+			if (form.elements['message'].value == '') {
+				alert('Please enter a message!');
+			} else {
+				encrypt(message.value).then(function(encrypted_msg) {
+					form.elements['message'].value = encrypted_msg;
+					form.submit();
+				});
+				return true;
+			}
+		});
 	} else {
-		var pub_key = openpgp.key.readArmored(document.getElementById("pubkey").innerHTML).keys[0];
-		var plaintext = message.value;
-		var ciphertext = openpgp.encryptMessage([pub_key],plaintext);
-		message.value = ciphertext;
-		return true;
-	}    
-  } else {
-    window.alert("Error: Browser not supported\nReason: We need a cryptographically secure PRNG to be implemented (i.e. the window.crypto method)\nSolution: Use Chrome >= 11, Safari >= 3.1, Firefox >= 21, Opera >= 15 or IE >= 11.");   
-    return false;
-  }
-}
+		// not ready
+		document.getElementById("button").disabled = true;
+		window.alert("Error: Browser not supported\nReason: We need a cryptographically secure PRNG to be implemented (i.e. the window.crypto method)\nSolution: Use Chrome >= 11, Safari >= 3.1, Firefox >= 21, Opera >= 15 or IE >= 11.");
+		return false;
+	}
+});
+
+function encrypt(msg) {
+	if (msg.indexOf("-----BEGIN PGP MESSAGE-----") !== -1 && msg.indexOf("-----END PGP MESSAGE-----") !== -1) {
+		return msg;
+	} else {
+		var key = document.getElementById("pubkey").innerHTML;
+		var publicKey = openpgp.key.readArmored(key).keys[0];
+		return openpgp.encryptMessage(publicKey, msg).then(function(pgpMessage) {
+			return pgpMessage;
+		});
+	}
+} 
 </script>
 
 <h3><a href="https://github.com/encrypt-to/secure.contactform.php">secure.contactform.php</a></h3>
 
 <p>Secure contact form made with PHP based on OpenPGP.js a JavaScript implementation of the OpenPGP standard.</p>
 
-<form name="contact" method="post" action="send_form.php" onsubmit="return encrypt();"> 
+<form id="form" method="post" action="send_form.php"> 
 	<table width="450px">
 		<tr>
 	  		<td valign="top">

@@ -1,8 +1,8 @@
 <?php
 
 /*
- * secure.contactform.php v1.3
- * Copyright (c) 2014 Jan Wiegelmann, http://wiegelmann.net
+ * secure.contactform.php
+ * Copyright (c) Jan Wiegelmann, http://wiegelmann.net
  * open sourced under the MIT license.
  * based on OpenPGP.js a JavaScript implementation of the OpenPGP standard.
  */
