@@ -32,14 +32,11 @@ if(isset($_POST['email'])) {
   if(!preg_match($email_exp,$email_from)) { 
     $error_message .= 'The Email Address you entered does not appear to be valid.<br />'; 
   }
- 
-  $string_exp = "/^[a-zA-Z0-9äöüÄÖÜß .'-]+$/";
- 
-  if(!preg_match($string_exp,$subject)) {
+  if(strlen($subject) < 1) { 
    	$error_message .= 'The Subject you entered does not appear to be valid.<br />';
   } 
   if(strlen($message) < 1) { 
-    $error_message .= 'The Message you entered do not appear to be valid.<br />'; 
+    $error_message .= 'The Message you entered does not appear to be valid.<br />'; 
   } 
   if(strlen($error_message) > 0) { 
     died($error_message); 
@@ -50,19 +47,15 @@ if(isset($_POST['email'])) {
       $bad = array("content-type","bcc:","to:","cc:","href");
       return str_replace($bad,"",$string);
   }
- 
- 
+  
 $header = 'Content-Type: text/plain; charset=UTF-8' . "\n" . 'From: ' . $email_from . "\n" . 'X-Mailer: PHP/' . phpversion();
 
-//Für K9 (Android)
 $message = str_replace("\r", "", $message);
 
 @mail($email_to, $subject, $message, $header);  
  
 ?>
-
 Thank you for contacting us.
- 
 <?php
 }
 ?>
